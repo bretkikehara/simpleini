@@ -62,10 +62,8 @@ func Parse(input io.Reader) (*INI, error) {
 			if section == "" {
 				return nil, fmt.Errorf("Line %d: Property defined outside of a section", lineNum)
 			}
-			parts := strings.Split(line, "=")
-			if len(parts) != 2 {
-				return nil, fmt.Errorf("Line %d: Malformed property", lineNum)
-			}
+			// allows equals character in the value
+			parts := strings.SplitN(line, "=", 2)
 			property := strings.Trim(parts[0], " ")
 			if _, present := ini.dict[section][property]; present {
 				return nil, fmt.Errorf("Line %d: Property '%s' has been defined previously", lineNum, property)
